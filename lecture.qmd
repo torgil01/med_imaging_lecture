@@ -1,0 +1,43 @@
+---
+title: "Working woth medical data in python"
+author: "Torgil Vangberg"
+format: revealjs
+---
+
+## Neccesary libraries
+
+In this lecture we will only use two extra libraries 
+
+*  `nibabel` for reading and writing images
+*  `numpy` for math operations 
+
+
+## Installing libraries
+
+It is good practice to install packages in a specific environment. This will avoid conflicts with other packages.
+
+Here we will use python venv to set up a virtual environment.
+
+```{python}
+#| eval: false
+#| echo: true
+
+mkdir .venv   # create folder where we will store the venv
+python -m venv .venv/nii # create venv called "nii" 
+source .venv/nii/bin/activate # activate nii environment
+```
+
+Notice that the `nii` environment is now active. You can see that it is active since the promte is changed to `(nii)`.
+
+Now we can install the libraries
+
+```{python}
+#| eval: false
+#| echo: true
+
+pip install nibabel
+pip install numpy
+```
+
+These libraris will only be available when the `nii` environment is active. 
+
