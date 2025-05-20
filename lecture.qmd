@@ -1,22 +1,27 @@
 ---
-title: "Working woth medical data in python"
+title: "Working with medical data in python"
 author: "Torgil Vangberg"
-format: revealjs
+format: 
+    revealjs:
+        theme: [white, custom.scss]
 ---
 
 ## Neccesary libraries
 
-In this lecture we will only use two extra libraries 
+In this exercise we will use two extra libraries 
 
 *  `nibabel` for reading and writing images
 *  `numpy` for math operations 
 
 
-## Installing libraries
+## Using virtual environments
+*Not neccesary, but good practice:*
 
-It is good practice to install packages in a specific environment. This will avoid conflicts with other packages.
+* Install packages in a virtual environment
+* Prevents conflicts with other libraries/code
 
-Here we will use python venv to set up a virtual environment.
+Here we use python `venv` to set up a virtual environment.
+
 
 ```{python}
 #| eval: false
@@ -27,7 +32,9 @@ python -m venv .venv/nii # create venv called "nii"
 source .venv/nii/bin/activate # activate nii environment
 ```
 
-Notice that the `nii` environment is now active. You can see that it is active since the promte is changed to `(nii)`.
+## Installing libraries
+
+Check that the `nii` environment is active. You can see that it is active if the promte is changed to `(nii)`.
 
 Now we can install the libraries
 
@@ -39,5 +46,34 @@ pip install nibabel
 pip install numpy
 ```
 
-These libraris will only be available when the `nii` environment is active. 
+These libraries are only be available in the `nii` environment. 
 
+
+# Training data
+* Will use data from the XIX dataset [https://brain-development.org/ixi-dataset]([https://brain-development.org/ixi-dataset/])
+* I have processed images from one participant so that several brain regions are labeled. 
+* The goal is to extract two *features* from the images.
+    - Volume of the hippocampus
+    - Average proton density of the hippocampus
+
+ 
+## Download data 
+* Use file orgainzation
+
+# Loading data in python
+We will start by reading the T1 and label image.
+
+First we load the image objects as follows:
+
+```{python}
+#| eval: false
+#| echo: true
+
+import nibabel as nib
+import numpy as np
+
+t1 = nib.load("path_to_t1_image")
+label = nib.load("path_to_label_image")
+```
+
+## Inspacting the data
