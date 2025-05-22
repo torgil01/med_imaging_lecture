@@ -4,33 +4,37 @@ author: "Torgil Vangberg"
 format: 
     revealjs:
         theme: [white, custom.scss]
+highlight-style: github
 ---
 
-## Neccesary libraries
+# Setting up the software environment 
 
-In this exercise we will use two extra libraries 
+## Libraries
 
-*  `nibabel` for reading and writing images
-*  `numpy` for math operations 
+In this exercise we will use two extra libraries
 
+-   `nibabel` for reading and writing images
+-   `numpy` for math operations
 
-## Using virtual environments
+## Using virtual environments {.smaller}
+
 *Not neccesary, but good practice:*
 
-* Install packages in a virtual environment
-* Prevents conflicts with other libraries/code
+-   Install packages in a virtual environment
+-   Prevents conflicts with other libraries/code
 
 Here we use python `venv` to set up a virtual environment.
 
-
-```{python}
-#| eval: false
-#| echo: true
-
+```{.bash  code-line-numbers="|1|2|3"}
 mkdir .venv   # create folder where we will store the venv
 python -m venv .venv/nii # create venv called "nii" 
 source .venv/nii/bin/activate # activate nii environment
 ```
+
+
+::: callout-note
+Under windows, it might be best to use `powershell` for these operations. Also, `python` may be called `py` in windows.
+:::
 
 ## Installing libraries
 
@@ -38,34 +42,32 @@ Check that the `nii` environment is active. You can see that it is active if the
 
 Now we can install the libraries
 
-```{python}
-#| eval: false
-#| echo: true
-
+```{.bash}
 pip install nibabel
 pip install numpy
 ```
 
-These libraries are only be available in the `nii` environment. 
-
+These libraries are only be available in the `nii` environment.
 
 # Training data
-* Will use data from the XIX dataset [https://brain-development.org/ixi-dataset]([https://brain-development.org/ixi-dataset/])
-* I have processed images from one participant so that several brain regions are labeled. 
-* The goal is to extract two *features* from the images.
-    - Volume of the hippocampus
-    - Average proton density of the hippocampus
 
- 
-## Download data 
-* Use file orgainzation
+-   Will use data from the XIX dataset [https://brain-development.org/ixi-dataset](%5Bhttps://brain-development.org/ixi-dataset/%5D)
+-   I have processed images from one participant so that several brain regions are labeled.
+-   The goal is to extract two *features* from the images.
+    -   Volume of the hippocampus
+    -   Average proton density of the hippocampus
+
+## Download data
+
+-   Use file orgainzation
 
 # Loading data in python
+
 We will start by reading the T1 and label image.
 
 First we load the image objects as follows:
 
-```{python}
+```{python }
 #| eval: false
 #| echo: true
 
@@ -76,4 +78,4 @@ t1 = nib.load("path_to_t1_image")
 label = nib.load("path_to_label_image")
 ```
 
-## Inspacting the data
+## Inspecting the data
