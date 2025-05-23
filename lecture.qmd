@@ -1,13 +1,14 @@
 ---
 title: "Working with medical data in python"
 author: "Torgil Vangberg"
-format: 
-    revealjs:
-        theme: [white, custom.scss]
-highlight-style: github
+format: html
 ---
 
 # Setting up the software environment 
+engine: knitr
+highlight-style: github
+revealjs:
+        theme: [white, custom.scss]
 
 ## Libraries
 
@@ -25,10 +26,12 @@ In this exercise we will use two extra libraries
 
 Here we use python `venv` to set up a virtual environment.
 
-```{.bash  code-line-numbers="|1|2|3"}
-mkdir .venv   # create folder where we will store the venv
-python -m venv .venv/nii # create venv called "nii" 
-source .venv/nii/bin/activate # activate nii environment
+```{python}
+#| eval: false
+#| echo: true
+!mkdir .venv   # create folder where we will store the venv
+!python -m venv .venv/nii # create venv called "nii" 
+!source .venv/nii/bin/activate # activate nii environment
 ```
 
 
@@ -67,13 +70,12 @@ We will start by reading the T1 and label image.
 
 First we load the image objects as follows:
 
-```{python }
+```{python}
 #| eval: false
 #| echo: true
 
 import nibabel as nib
 import numpy as np
-
 t1 = nib.load("path_to_t1_image")
 label = nib.load("path_to_label_image")
 ```
