@@ -99,7 +99,7 @@ t1 = t1_nii.get_fdata()
 label = label_nii.get_fdata()
 ```
 
-We have now loaded the data from the two images. The image headers are in `t1_nii` and `label_nii`, while the image data is in `t1` and `label`.
+We have now loaded the data from the two images. The image headers are in `t1_nii` and `label_nii`, while the image data is in `t1` and `label`. Note that the image data is stored as a `numpy` array. (You can write `type(t1)` to check the type of a variable.) 
 
 
 ## Inspecting the image header
@@ -112,10 +112,12 @@ Sometimes we need to get data from the image header. For example, the voxel size
 print(t1_nii.header)
 ```
 
-Abowe is the complete header from the T1 image. You can get a specific value using `t1_nii.header["key"]`. For example, the voxel size is `t1_nii.header["pixdim"][1]` and the data type is `t1_nii.header["datatype"]`
+Above is the complete header from the T1 image. 
+
+You can get a specific value using `t1_nii.header["key"]`. For example, the voxel size is `t1_nii.header["pixdim"][1]` and the data type is `t1_nii.header["datatype"]`
 
 ## Viewing the image
-Detailed inspection of the images are best done using a dedicated image viewer, but we can also use `matplotlib` to view the images.
+Detailed inspection of the images are best done using a dedicated image viewer, but we can also use `matplotlib` to plot some slices. We can for example display slice 120 in the z-direction as follows:  
 
 ```{python} 
 #| eval: true
@@ -127,3 +129,8 @@ plt.figure()
 plt.imshow(t1[:,:,120], cmap="gray")
 plt.show()
 ```
+
+### Plot with overays
+
+
+
