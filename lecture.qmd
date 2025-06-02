@@ -4,6 +4,8 @@ author: "Torgil Vangberg"
 format: html
 ---
 
+In the exercise we will learn how to load and extract features from nifti files. You may enter the  code in the console (IPython for example) or save the code in a script and run it.
+
 # Setting up the software environment 
 engine: knitr
 highlight-style: github
@@ -27,6 +29,10 @@ In this exercise we will use two extra libraries
 
 Here we use python `venv` to set up a virtual environment.
 
+::: callout-note
+If you have `conda`, you can use that to create a virtual environment. Also, if you have `conda` but want to use `venv`, deactivate conda: `conda deactivate`. 
+:::
+
 ```{bash}
 #| eval: false
 #| echo: true
@@ -40,6 +46,7 @@ source .venv/nii/bin/activate # activate nii environment
 Things may be a bit more complicated under windows.
 Under windows, it might be best to use `powershell` for these operations. Also, `python` may be called `py` in windows.
 :::
+
 
 ## Installing libraries
 
@@ -73,25 +80,50 @@ We will start by reading the T1 and label image.
 First we load the image objects as follows:
 
 ```{python}
-#| eval: false
+#| eval: true
 #| echo: true
 
 import nibabel as nib
 import numpy as np
-t1.nii = nib.load("path_to_t1_image")
-label.nii = nib.load("path_to_label_image")
+t1_nii = nib.load("data/T1.nii.gz")
+label_nii = nib.load("data/labels.nii.gz")
 ```
 
 Note that `nib.load` only returns the header and not the image data. We load the image data using the method `.get_fdata()`.
 
 ```{python}
-#| eval: false
+#| eval: true
 #| echo: true
 
-t1 = t1.nii.get_fdata()
-label = label.nii.get_fdata()
+t1 = t1_nii.get_fdata()
+label = label_nii.get_fdata()
 ```
+
+We have now loaded the data from the two images. The image headers are in `t1_nii` and `label_nii`, while the image data is in `t1` and `label`.
 
 
 ## Inspecting the image header
-It may be neccesary to get information about the image header.
+Sometimes we need to get data from the image header. For example, the voxel size or data type. 
+
+```{python}
+#| eval: true
+#| echo: true
+
+print(t1_nii.header)
+```
+
+Abowe is the complete header from the T1 image. You can get a specific value using `t1_nii.header["key"]`. For example, the voxel size is `t1_nii.header["pixdim"][1]` and the data type is `t1_nii.header["datatype"]`
+
+## Viewing the image
+Detailed inspection of the images are best done using a dedicated image viewer, but we can also use `matplotlib` to view the images.
+
+```{python} 
+#| eval: true
+#| echo: true
+
+import matplotlib.pyplot as plt
+
+plt.figure()
+plt.imshow(t1[:,:,120], cmap="gray")
+plt.show()
+```
