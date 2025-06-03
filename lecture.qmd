@@ -61,7 +61,7 @@ pip install numpy
 
 These libraries are only be available in the `nii` environment.
 
-# Training data
+# Example data
 
 -   Will use data from the XIX dataset [https://brain-development.org/ixi-dataset](%5Bhttps://brain-development.org/ixi-dataset/%5D)
 -   I have processed images from one participant so that several brain regions are labeled.
@@ -131,6 +131,30 @@ plt.show()
 ```
 
 ### Plot with overays
+Below is a example of plotting the T1 and the label image on top of each other. Note that I set the bakground to NaN in label to avoid ploting the background.
 
 
+```{python}
+#| eval: true
+#| echo: true
 
+
+label = np.where(label == 0, np.nan, label)
+plt.figure()
+plt.imshow(t1[:,:,120], cmap="gray")
+plt.imshow(label[:,:,120], cmap="Paired", alpha=0.5)
+plt.show()
+```
+
+
+# Extracting "features"
+We will extract two simple features from the images.Hippocampus volume and proton density in the hippocampus. Hippocampus volume is a "real" feature that is associated with intelligence and is a good predictor of dementia. Proton density is not commonly used, but it illustrates how one can use a labeled image to extract data from another image, which is often done.
+
+## Hippocampus volume
+```{python}
+#| eval: true
+#| echo: true
+
+hippocampus = np.where(label == 2, 1, 0)
+hippocampus_volume = np.sum(hippocampus) * t1_nii.header["pixdim"][1] * t1_nii.header["pixdim"][2] * t1_nii.header["pixdim"][3]
+hippocampus_pd = np.mean(t1[hippocampus == 1])
