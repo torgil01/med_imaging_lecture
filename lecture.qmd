@@ -4,33 +4,31 @@ author: "Torgil Vangberg"
 format: html
 ---
 
-In the exercise we will learn how to load and extract features from nifti files. You may enter the  code in the console (IPython for example) or save the code in a script and run it.
+In the exercise, we will learn how to load and extract features from NIFTI files. You may enter the code in the console (IPython, for example) or save the code in a script and run it.
 
-# Setting up the software environment 
-engine: knitr
-highlight-style: github
-revealjs:
-        theme: [white, custom.scss]
+# Setting up the software environment
 
-## Libraries
+This may be the hardest part since details may differ between various operating systems.
 
-In this exercise we will use two extra libraries
+## Python Libraries
+
+In this exercise, we will use three Python libraries which is not part of the basic Python installation.
 
 -   `nibabel` for reading and writing images
 -   `numpy` for math operations
 -   `matplotlib` for plotting
 
-## Using virtual environments {.smaller}
+## Using virtual environments
 
-*Not neccesary, but good practice:*
+\*\* This step is optional, but it is recommended practice for avoiding conflicts.\*\*
 
 -   Install packages in a virtual environment
 -   Prevents conflicts with other libraries/code
 
-Here we use python `venv` to set up a virtual environment.
+Here we use Python `venv` to set up a virtual environment.
 
 ::: callout-note
-If you have `conda`, you can use that to create a virtual environment. Also, if you have `conda` but want to use `venv`, deactivate conda: `conda deactivate`. 
+If you have `conda`, you can use that to create a virtual environment. Also, if you have `conda` but want to use `venv`, deactivate conda: `conda deactivate`.
 :::
 
 ```{bash}
@@ -41,25 +39,23 @@ python -m venv .venv/nii # create venv called "nii"
 source .venv/nii/bin/activate # activate nii environment
 ```
 
-
 ::: callout-note
-Things may be a bit more complicated under windows.
-Under windows, it might be best to use `powershell` for these operations. Also, `python` may be called `py` in windows.
+Things may be a bit more complicated under Windows. Under Windows, it might be best to use PowerShell for these operations. Also, `Python may be called py in Windows`.
 :::
-
 
 ## Installing libraries
 
-Check that the `nii` environment is active. You can see that it is active if the promte is changed to `(nii)`.
+Check that the `nii` environment is active. You can see that it is active if the prompt is changed to `(nii)`.
 
 Now we can install the libraries
 
-```{.bash}
+``` bash
 pip install nibabel
 pip install numpy
+pip install matplotlib
 ```
 
-These libraries are only be available in the `nii` environment.
+Since you are in the `nii` environment, these libraries will only be accessible when it is active.
 
 # Example data
 
@@ -67,17 +63,27 @@ These libraries are only be available in the `nii` environment.
 -   I have processed images from one participant so that several brain regions are labeled.
 -   The goal is to extract two *features* from the images.
     -   Volume of the hippocampus
-    -   Average proton density of the hippocampus
+    -   Average T1 value in the hippocampus
 
 ## Download data
-Download the data from: https://drive.google.com/drive/folders/1hCWnJNbRW9OC0CV1fkozqaxrp2IwNod1?usp=drive_link 
 
-Save it in a folder called `data` alongside your code. 
+Download the data from: [https://drive.google.com/drive/folders/1hCWnJNbRW9OC0CV1fkozqaxrp2IwNod1?usp=drive_link](%https://drive.google.com/drive/folders/1hCWnJNbRW9OC0CV1fkozqaxrp2IwNod1?usp=drive_link)
 
-# Loading data in python
-We will start by reading the T1 and label image.
+Save it in a folder called `data` alongside your code.
 
-First we load the image objects as follows:
+# If you have been using other programming languages
+
+If you have been using `R` or `matlab` there are some pitfalls when using Python.
+
+-   Python uses zero indexing, so the 1st element in an array has index 0.
+-   Array indexing is `array[start:stop:step]`, but stop is not included. That is, if you want the 1st to 3rd element in a array A; write `A[0:3]`
+-   When using `numpy` arrays, remember that an expression like `array_A = array_B` will point to the same data, so if you modify `array_A` then `array_B` will also be modified. Use `np.copy` instead.
+
+# Loading data in Python
+
+We will start by reading the T1 and tha label image.
+
+First, we load the image objects as follows:
 
 ```{python}
 #| eval: true
@@ -99,11 +105,11 @@ t1 = t1_nii.get_fdata()
 label = label_nii.get_fdata()
 ```
 
-We have now loaded the data from the two images. The image headers are in `t1_nii` and `label_nii`, while the image data is in `t1` and `label`. Note that the image data is stored as a `numpy` array. (You can write `type(t1)` to check the type of a variable.) 
-
+We have now loaded the data from the two images. The image headers are in `t1_nii` and `label_nii`, while the image data is in `t1` and `label`. Note that the image data is stored as a `numpy` array. (You can write `type(t1)` to check the type of a variable.)
 
 ## Inspecting the image header
-Sometimes we need to get data from the image header. For example, the voxel size or data type. 
+
+Sometimes we need to get data from the image header—for example, the voxel size or data type.
 
 ```{python}
 #| eval: true
@@ -112,14 +118,15 @@ Sometimes we need to get data from the image header. For example, the voxel size
 print(t1_nii.header)
 ```
 
-Above is the complete header from the T1 image. 
+Above is the complete header from the T1 image.
 
 You can get a specific value using `t1_nii.header["key"]`. For example, the voxel size is `t1_nii.header["pixdim"][1]` and the data type is `t1_nii.header["datatype"]`
 
-## Viewing the image
-Detailed inspection of the images are best done using a dedicated image viewer, but we can also use `matplotlib` to plot some slices. We can for example display slice 120 in the z-direction as follows:  
+## Viewing the images
 
-```{python} 
+Detailed inspection of the images is best done using a dedicated image viewer, but we can also use `matplotlib` to plot some slices. We can, for example, display slice 120 in the z-direction as follows:
+
+```{python}
 #| eval: true
 #| echo: true
 
@@ -130,9 +137,9 @@ plt.imshow(t1[:,:,120], cmap="gray")
 plt.show()
 ```
 
-### Plot with overays
-Below is a example of plotting the T1 and the label image on top of each other. Note that I set the bakground to NaN in label to avoid ploting the background.
+### Plot with overlays
 
+Below is an example of plotting the T1 and the label image on top of each other. Note that I set the background to NaN in the label to avoid plotting it.
 
 ```{python}
 #| eval: true
@@ -146,15 +153,50 @@ plt.imshow(label[:,:,120], cmap="Paired", alpha=0.5)
 plt.show()
 ```
 
-
 # Extracting "features"
-We will extract two simple features from the images.Hippocampus volume and proton density in the hippocampus. Hippocampus volume is a "real" feature that is associated with intelligence and is a good predictor of dementia. Proton density is not commonly used, but it illustrates how one can use a labeled image to extract data from another image, which is often done.
+
+We will extract two simple features from the images. Hippocampus volume and proton density in the hippocampus. Hippocampus volume is a "real" feature that is associated with intelligence and is a good predictor of dementia. The T1 value is used (but not with this sequence) and illustrates how one can use a labeled image to extract data from another image, which is often done.
 
 ## Hippocampus volume
+
+From the previous lecture, we saw that the left and right hippocampi had labels `17` and `53`. Calculating the average hippocampus volume (mean of left and right) can then be done as follows:
+
+-   Set labels 17 and 53 to 1 and the other to zero, and copy to a new array `hippocampus`
+-   Compute the voxel volume using the `pixdim` header data
+    -   Note that `pixdim` contains 8 elements, but the voxel dimensions are elements 2,3,4.
+-   Count the number of elements in the `hippocampus,` and multiply by the voxel volume, and divide by 2 to get the hippocampus volume in cubic mm
+-   We finally convert the volume to cubic cm = ml by dividing by 1000.
+
 ```{python}
 #| eval: true
 #| echo: true
 
-hippocampus = np.where(label == 2, 1, 0)
-hippocampus_volume = np.sum(hippocampus) * t1_nii.header["pixdim"][1] * t1_nii.header["pixdim"][2] * t1_nii.header["pixdim"][3]
-hippocampus_pd = np.mean(t1[hippocampus == 1])
+hippocampus = np.where((label == 17) | (label == 53), 1,0)
+voxel_volume =  np.prod(label_nii.header["pixdim"][1:4]) 
+    
+hippocampus_volume = (np.sum(hippocampus) * voxel_volume) / 2 / 1000
+print("Average hippocampus volume is ", hippocampus_volume, "ml" )
+```
+
+## Proton density
+
+For extracting the average T1 value, we will use the `hippocampus` array we just created as a "mask" to isolate the hippocampus region in the T1 image. In this example, we assume that the two images are registered, meaning they are perfectly aligned and have the exact dimensions. Generally, this is not the case; however, in this example, I have already interpolated the images to ensure they have the same size.
+
+```{python}
+#| eval: true
+#| echo: true
+
+# we can check that the image dimentions are the same:
+print("Shape of hippocampus mask:", np.shape(hippocampus))
+
+# we can check that the image dimentions are the same:
+print("Shape of T1 image:", np.shape(t1))
+
+# we "mask" the PD image with the hippocampus mask so that 
+# only the hippocampus regions are non-zero
+t1_hip = t1 * hippocampus
+
+# then we take the mean of the non-zero elements
+t1_avg = np.mean(np.nonzero(t1_hip))
+print("Mean T1 vaule in the hippocampus is ", t1_avg  )
+```
