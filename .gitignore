@@ -6,6 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
+lecture_files/
+*.html
+data/
+env/
+
+
 # Distribution / packaging
 .Python
 build/
